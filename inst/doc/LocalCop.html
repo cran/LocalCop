@@ -590,12 +590,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="overview" class="section level2">
 <h2>Overview</h2>
 <p>This vignette shows how to use the <strong>LocalCop</strong> package to conduct local likelihood inference for the dependence parameters in conditional copula models, based on the works <span class="citation">Acar, Craiu, and Yao (<a href="#ref-ACY2011">2011</a>)</span>, <span class="citation">Acar, Craiu, and Yao (<a href="#ref-ACY2013">2013</a>)</span> and <span class="citation">Acar, Czado, and Lysy (<a href="#ref-ACL2019">2019</a>)</span>.</p>
-<p>For any bivariate response vector <span class="math inline">\((Y_1, Y_2)\)</span>, the conditional joint distribution given a covariate <span class="math inline">\(X\)</span> is given by
-<span class="math display" id="eq:fullmodel">\[\begin{equation}
-F_X(y_1, y_2 \mid x) = C_X (F_{1\mid X} (y_1 \mid x),F_{2\mid X} (y_2 \mid x) \mid x ),
-\tag{1}
-\end{equation}\]</span>
-where <span class="math inline">\(F_{1\mid X}(y_1 \mid x)\)</span> and <span class="math inline">\(F_{2\mid X}(y_2 \mid x)\)</span> are the conditional marginal distributions of <span class="math inline">\(Y_1\)</span> and <span class="math inline">\(Y_2\)</span> given <span class="math inline">\(X\)</span>, and <span class="math inline">\(C_X(u, v \mid x)\)</span> is a conditional copula function. That is, for given <span class="math inline">\(X = x\)</span>, the function <span class="math inline">\(C_X(u, v \mid x)\)</span> is a bivariate CDF with uniform margins.</p>
+<p><strong>LocalCop</strong> is primarily intended for users who want to apply conditional copula models to real-world data with an interest to infer covariate effects on the conditional dependence between two response variables. This is done semiparametrically using kernel smoothing within the likelihood framework as detailed below.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># load required packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(LocalCop)   <span class="co"># for conditional copula modeling</span></span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(VineCopula) <span class="co"># for simulating copula data </span></span>
@@ -605,6 +600,12 @@ where <span class="math inline">\(F_{1\mid X}(y_1 \mid x)\)</span> and <span cla
 </div>
 <div id="data-generating-model" class="section level2">
 <h2>Data generating model</h2>
+<p>For any bivariate response vector <span class="math inline">\((Y_1, Y_2)\)</span>, the conditional joint distribution given a covariate <span class="math inline">\(X\)</span> is given by
+<span class="math display" id="eq:fullmodel">\[\begin{equation}
+F_X(y_1, y_2 \mid x) = C_X (F_{1\mid X} (y_1 \mid x),F_{2\mid X} (y_2 \mid x) \mid x ),
+\tag{1}
+\end{equation}\]</span>
+where <span class="math inline">\(F_{1\mid X}(y_1 \mid x)\)</span> and <span class="math inline">\(F_{2\mid X}(y_2 \mid x)\)</span> are the conditional marginal distributions of <span class="math inline">\(Y_1\)</span> and <span class="math inline">\(Y_2\)</span> given <span class="math inline">\(X\)</span>, and <span class="math inline">\(C_X(u, v \mid x)\)</span> is a conditional copula function. That is, for given <span class="math inline">\(X = x\)</span>, the function <span class="math inline">\(C_X(u, v \mid x)\)</span> is a bivariate CDF with uniform margins.</p>
 <p>If the true conditional marginal distrutions are known, we may compute the marginally uniform variables <span class="math inline">\(U = F_{1|X}(Y_1 \mid X)\)</span> and <span class="math inline">\(V = F_{2|X}(Y_2 \mid X)\)</span>. In practice these distributions are unknown, such that <span class="math inline">\(\hat U = \hat F_{1|X}(Y_1 \mid X)\)</span> and <span class="math inline">\(\hat V = \hat F_{1|X}(Y_2 \mid X)\)</span> are pseudo-uniform variables estimated using parametric or nonparametric techniques – see <span class="citation">Acar, Czado, and Lysy (<a href="#ref-ACL2019">2019</a>)</span> for an application using ARMA-GARCH models. Either way, the focus of <strong>LocalCop</strong> is on estimating the conditional copula function, which is given the semi-parametric model
 <span class="math display" id="eq:copmod">\[\begin{equation}
 C_X(u, v \mid x) = \mathcal{C}(u, v; \theta(x), \nu),
